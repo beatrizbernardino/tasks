@@ -13,36 +13,32 @@ def index(request):
     return HttpResponse("Hello, world. You're at the tasks index.")
 
 
-@api_view(['POST', 'DELETE'])
-def task_detail(request, pk):
+@api_view(['DELETE'])
+def delete_detail(request, pk):
     """
-    Retrieve, update or delete a task.
+    delete a task.
     """
     try:
         task = Task.objects.get(pk=pk)
     except Task.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    # if request.method == 'GET':
-    #     get_task = Task.objects.all()
-    #     serializer_json = serializers.serialize("json", get_task)
-    #     return HttpResponse(serializer_json, content_type="application/json")
+    serializer_json = serializers.serialize("json", task)
+    task.delete()
+    return HttpResponse(serializer_json, content_type="application/json", status=status.HTTP_200_OK)
 
-    if request.method == 'POST':
+
+@api_view(['GET', 'POST'])
+def details_task(request):
+    if request.method == 'GET':
+        get_task = Task.objects.all()
+        serializer_json = serializers.serialize("json", get_task)
+        return HttpResponse(serializer_json, content_type="application/json", status=status.HTTP_200_OK)
+
+    elif request.method == 'POST':
         serializer = TaskSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return HttpResponse(request.data,  content_type="application/json", status=status.HTTP_201_CREATED)
+            serializer_json = serializers.serialize("json", serializer)
+            return HttpResponse(serializer_json,  content_type="application/json", status=status.HTTP_201_CREATED)
         return HttpResponse(request.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'DELETE':
-        task.delete()
-        serializer_json = serializers.serialize("json", task)
-        return HttpResponse(serializer_json, content_type="application/json", status=status.HTTP_200_OK)
-
-
-@api_view(['GET'])
-def get_task(request):
-    get_task = Task.objects.all()
-    serializer_json = serializers.serialize("json", get_task)
-    return HttpResponse(serializer_json, content_type="application/json", status=status.HTTP_200_OK)
