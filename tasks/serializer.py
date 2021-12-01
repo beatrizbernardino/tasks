@@ -1,4 +1,4 @@
-from django.contrib.auth.models import Task
+from .models import Task
 from rest_framework import serializers
 
 
