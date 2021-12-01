@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.contrib.auth.models import Task
+from .models import Task
 from .serializer import TaskSerializer
 from rest_framework import status
 from rest_framework.decorators import api_view
