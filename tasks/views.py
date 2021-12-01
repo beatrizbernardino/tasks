@@ -23,8 +23,8 @@ def delete_detail(request, pk):
     except Task.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    serializer_json = serializers.serialize("json", task)
     task.delete()
+    serializer_json = serializers.serialize("json", task)
     return HttpResponse(serializer_json, content_type="application/json", status=status.HTTP_200_OK)
 
 
