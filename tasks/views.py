@@ -1,11 +1,10 @@
-from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.models import Task
-from rest_framework import viewsets
 from .serializer import TaskSerializer
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.core import serializers
 
 # Create your views here.
 
@@ -26,8 +25,8 @@ def task_detail(request, pk):
 
     if request.method == 'GET':
         get_task = Task.objects.all()
-        serializer = TaskSerializer(get_task)
-        return Response(serializer.data)
+        serializer_json = serializers.serialize("json", get_task)
+        return HttpResponse(serializer_json, content_type="application/json")
 
     elif request.method == 'POST':
         serializer = TaskSerializer(data=request.data)
