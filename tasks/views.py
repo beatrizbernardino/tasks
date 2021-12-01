@@ -24,7 +24,7 @@ def delete_detail(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     task.delete()
-    return HttpResponse("Task deletada com sucesso", status=status.HTTP_200_OK)
+    return HttpResponse({"Status": "Task deletada com sucesso"}, content_type="application/json", status=status.HTTP_200_OK)
 
 
 @api_view(['GET', 'POST'])
